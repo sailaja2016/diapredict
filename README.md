@@ -1,4 +1,4 @@
-# 🩺 DiaPredict — Early Stage Diabetes Risk Predictor
+# 🩺 DiaPredict — Early Stage Diabetes Risk Prediction
 ## 📌 About the Project:
 *DiaPredict* is a comprehensive web-based predictive system that uses Machine Learning to assess the risk of early-stage diabetes based on user-reported symptoms. It accepts simple symptom-based inputs — such as age, gender, and 14 diabetes-related symptoms — and processes them through a *Random Forest classifier* trained on a validated healthcare dataset.
 > ⚠️ This tool is for *awareness and early screening only* — not a substitute for professional medical diagnosis.
