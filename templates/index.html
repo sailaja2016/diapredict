@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DiaPredict - Diabetes Predictor</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="icon" href="/static/images/logo.png"/>
+<style>
+:root{--navy:#1a2a4a;--blue:#1565c0;--blue-mid:#1976d2;--blue-light:#2196f3;--orange:#e07820;--orange-hover:#c86a10;--white:#ffffff;--gray-bg:#f0f2f5;--text-dark:#1a1a2e;--text-light:#666;--border:#dde3ec;--shadow:0 4px 20px rgba(0,0,0,.10);--radius:12px;--teal:#00acc1}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--gray-bg);color:var(--text-dark);overflow-x:hidden}
+
+/* HEADER */
+header{background:var(--navy);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.logo-wrap{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-wrap img{height:36px;width:36px;border-radius:50%;object-fit:cover}
+.brand{font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:900;color:#f5c518;letter-spacing:.5px}
+nav{display:flex;gap:32px}
+nav a{color:var(--white);text-decoration:none;font-size:.92rem;font-weight:600;padding:4px 0;border-bottom:2px solid transparent;transition:border-color .2s,color .2s}
+nav a:hover,nav a.active{border-bottom-color:var(--orange);color:#f5c518}
+
+/* PAGES */
+.page{display:none}.page.active{display:block}
+
+/* TICKER */
+.ticker-wrap{background:var(--navy);color:rgba(255,255,255,.8);padding:8px 0;overflow:hidden;font-size:.82rem}
+.ticker-content{display:inline-block;white-space:nowrap;animation:ticker 28s linear infinite}
+@keyframes ticker{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1565c0 0%,#1a2a4a 60%,#0d1b35 100%);padding:80px 40px 90px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(33,150,243,.18) 0%,transparent 60%),radial-gradient(circle at 70% 30%,rgba(224,120,32,.12) 0%,transparent 50%)}
+.hero-content{position:relative;z-index:1}
+.hero h1{font-family:'Nunito',sans-serif;font-size:2.6rem;font-weight:900;color:var(--white);line-height:1.2;margin-bottom:16px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
+.hero p{color:rgba(255,255,255,.82);font-size:1rem;margin-bottom:8px}
+.hero p strong{color:#f5c518}
+.btn-orange{display:inline-block;background:var(--orange);color:white;padding:12px 32px;border-radius:8px;font-weight:700;font-size:1rem;border:none;cursor:pointer;margin-top:24px;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 4px 16px rgba(224,120,32,.4);text-decoration:none}
+.btn-orange:hover{background:var(--orange-hover);transform:translateY(-2px);box-shadow:0 6px 20px rgba(224,120,32,.5)}
+
+/* FEATURES */
+.features-section{padding:50px 40px;background:var(--gray-bg)}
+.features-section h2{text-align:center;font-family:'Nunito',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:32px}
+.features-grid{display:flex;flex-direction:column;gap:20px;max-width:800px;margin:0 auto}
+.feature-card{background:white;border-radius:var(--radius);padding:24px 28px;display:flex;align-items:center;gap:24px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.feature-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.13)}
+.feature-icon{width:80px;height:80px;flex-shrink:0;background:var(--gray-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.2rem}
+.feature-text h3{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+.feature-text p{font-size:.88rem;color:var(--text-light);margin-bottom:12px}
+
+/* FOOTER */
+footer{background:var(--navy);color:white;padding:18px 40px;display:flex;align-items:center;gap:16px}
+footer img{height:30px;width:30px;border-radius:50%}
+footer p{font-size:.82rem;color:rgba(255,255,255,.75)}
+
+/* PREDICTION */
+.predict-section{max-width:680px;margin:40px auto;padding:40px;background:white;border-radius:var(--radius);box-shadow:var(--shadow)}
+.predict-section h2{text-align:center;font-family:'Nunito',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:28px}
+.glossary-top-link{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-bottom:20px;font-size:.85rem}
+.glossary-top-link a{color:var(--teal);text-decoration:none;font-weight:600}
+.form-row{margin-bottom:20px}
+.form-row label{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px}
+.form-row select,.form-row input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;font-family:'Poppins',sans-serif;background:white;color:var(--text-dark);outline:none;transition:border-color .2s}
+.form-row select:focus,.form-row input:focus{border-color:var(--blue-light)}
+.btn-predict{background:#1565c0;color:white;border:none;padding:12px 36px;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;display:block;margin:28px auto 0;transition:background .2s,transform .15s;box-shadow:0 4px 14px rgba(21,101,192,.35)}
+.btn-predict:hover{background:#0d47a1;transform:translateY(-1px)}
+
+/* RESULT */
+.result-box{margin-top:28px;border-radius:var(--radius);padding:28px 24px;text-align:center;display:none;animation:fadeIn .5s ease}
+.result-box.high-risk{background:#fff3f3;border:1.5px solid #ffcdd2}
+.result-box.low-risk{background:#f0fff4;border:1.5px solid #c8e6c9}
+.result-box video{width:220px;border-radius:10px;margin:14px auto;display:block}
+.result-title{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.high-risk .result-title{color:#c62828}
+.low-risk .result-title{color:#2e7d32}
+.tips-section{margin-top:20px;text-align:left}
+.tips-section h4{font-size:.95rem;font-weight:700;margin-bottom:12px}
+.tips-section ul{list-style:none;padding:0}
+.tips-section ul li{padding:8px 12px;margin-bottom:8px;border-radius:8px;font-size:.88rem;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.high-risk .tips-section ul li{background:#fff8f8;border-left:3px solid #ef9a9a}
+.low-risk .tips-section ul li{background:#f8fff9;border-left:3px solid #a5d6a7}
+.referral-note{text-align:center;background:#e3f2fd;border-radius:8px;padding:12px 20px;margin-top:24px;font-size:.9rem;color:var(--blue)}
+.referral-note b{cursor:pointer;text-decoration:underline}
+.referral-note b:hover{color:var(--orange)}
+.glossary-bottom{text-align:center;margin-top:16px;font-size:.88rem}
+.glossary-bottom a{color:var(--teal);text-decoration:none;font-weight:600}
+
+/* BMI */
+.bmi-section{max-width:500px;margin:40px auto;padding:40px;background:white;border-radius:var(--radius);box-shadow:var(--shadow)}
+.bmi-section h2{text-align:center;font-family:'Nunito',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:28px}
+.bmi-result{margin-top:24px;padding:20px;border-radius:var(--radius);text-align:center;display:none}
+.bmi-value{font-size:2.5rem;font-weight:900;font-family:'Nunito',sans-serif}
+.bmi-category{font-size:1.1rem;font-weight:600;margin-top:6px}
+.bmi-bar-wrap{margin-top:16px;height:14px;background:linear-gradient(to right,#64b5f6,#81c784,#ffb74d,#e57373);border-radius:8px;position:relative}
+.bmi-marker{position:absolute;top:-6px;width:4px;height:26px;background:#1a2a4a;border-radius:2px;transform:translateX(-50%);transition:left .5s ease}
+
+/* GLOSSARY */
+.glossary-section{max-width:760px;margin:40px auto;padding:20px 40px 40px}
+.glossary-section h2{font-family:'Nunito',sans-serif;font-size:1.8rem;font-weight:800;text-align:center;margin-bottom:28px}
+.glossary-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.glossary-card{background:white;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border-top:4px solid var(--blue-mid)}
+.glossary-card h4{font-size:.98rem;font-weight:700;color:var(--blue);margin-bottom:6px}
+.glossary-card p{font-size:.85rem;color:var(--text-light);line-height:1.5}
+
+/* FAQ */
+.faq-section{max-width:760px;margin:40px auto;padding:20px 40px 40px}
+.faq-section h2{font-family:'Nunito',sans-serif;font-size:1.8rem;font-weight:800;text-align:center;margin-bottom:28px}
+.faq-item{background:white;border-radius:var(--radius);margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow:hidden}
+.faq-q{padding:18px 22px;font-weight:600;font-size:.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+.faq-q:hover{background:#f0f4ff}
+.faq-q span{color:var(--blue);font-size:1.2rem;transition:transform .3s}
+.faq-q.open span{transform:rotate(45deg)}
+.faq-a{padding:0 22px;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;font-size:.9rem;color:var(--text-light);line-height:1.6}
+.faq-a.open{max-height:300px;padding:0 22px 18px}
+
+/* REFERRAL */
+.referral-section{max-width:900px;margin:40px auto;padding:20px 40px 40px}
+.referral-section h2{font-family:'Nunito',sans-serif;font-size:1.8rem;font-weight:800;text-align:center;margin-bottom:10px}
+.referral-sub{text-align:center;color:var(--text-light);margin-bottom:30px;font-size:.92rem}
+.area-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:36px}
+.area-btn{background:white;border:2px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;font-weight:700;font-size:.88rem;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.area-btn:hover{border-color:var(--blue-light);color:var(--blue);transform:translateY(-2px)}
+.area-btn.selected{background:var(--blue);color:white;border-color:var(--blue)}
+.hospitals-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.hospital-card{background:white;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border-left:5px solid var(--blue-mid);transition:transform .2s}
+.hospital-card:hover{transform:translateY(-2px)}
+.hospital-card h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.hospital-card p{font-size:.82rem;color:var(--text-light);line-height:1.5}
+.hospital-card .hosp-tag{display:inline-block;background:#e3f2fd;color:var(--blue);font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:10px}
+.hospitals-section-title{font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+#hospitalsDisplay{display:none}
+
+/* SCROLL TOP */
+#scrollTop{position:fixed;bottom:28px;right:24px;background:var(--orange);color:white;border:none;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:none;z-index:999;box-shadow:0 4px 14px rgba(224,120,32,.4)}
+#scrollTop.visible{display:flex;align-items:center;justify-content:center}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.page-inner{animation:fadeIn .4s ease}
+
+@media(max-width:600px){
+  .area-grid{grid-template-columns:repeat(2,1fr)}
+  .hospitals-grid,.glossary-grid{grid-template-columns:1fr}
+  header{padding:0 16px}
+  nav{gap:16px}
+  .hero h1{font-size:1.8rem}
+  .predict-section,.bmi-section,.glossary-section,.faq-section,.referral-section{padding:24px 16px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap" onclick="showPage('home')">
+    <img src="/static/images/logo.png" alt="DiaPredict Logo"/>
+    <span class="brand">DiaPredict</span>
+  </div>
+  <nav>
+    <a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a>
+    <a href="#" onclick="showPage('bmi')" id="nav-bmi">BMI Calculator</a>
+    <a href="#" onclick="showPage('faq')" id="nav-faq">FAQ</a>
+  </nav>
+</header>
+
+<div class="ticker-wrap">
+  <span class="ticker-content">🩺 Diabetes Prediction – A platform to help predict diabetes based on multiple health factors. Stay informed, stay healthy! &nbsp;&nbsp;&nbsp; 🔵 Early detection saves lives. Know your risk today. &nbsp;&nbsp;&nbsp; ✅ Use DiaPredict to assess your early-stage diabetes risk in seconds.</span>
+</div>
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+  <div class="page-inner">
+    <div class="hero">
+      <div class="hero-content">
+        <h1>Welcome to the Diabetes Predictor!</h1>
+        <p>Early Prediction, Strong Protection</p>
+        <p>Want to know your risk of <strong>Diabetes?</strong></p>
+        <button class="btn-orange" onclick="showPage('predict')">Get Started</button>
+      </div>
+    </div>
+    <div class="features-section">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🩺</div>
+          <div class="feature-text">
+            <h3>Healthcare Advisory System</h3>
+            <p>Personalized health tips based on your diabetes risk.</p>
+            <button class="btn-orange" onclick="showPage('predict')" style="font-size:.85rem;padding:8px 20px;">Get Started</button>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏥</div>
+          <div class="feature-text">
+            <h3>Referral System</h3>
+            <p>Find nearby healthcare providers and specialists.</p>
+            <button class="btn-orange" onclick="showPage('referral')" style="font-size:.85rem;padding:8px 20px;">Locate Now</button>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📖</div>
+          <div class="feature-text">
+            <h3>Glossary Terms</h3>
+            <p>Understand key medical terms quickly and clearly.</p>
+            <button class="btn-orange" onclick="showPage('glossary')" style="font-size:.85rem;padding:8px 20px;">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <img src="/static/images/logo.png" alt="Logo"/>
+    <p>Diabetes Prediction – A platform to help predict diabetes based on multiple health factors. Stay informed, stay healthy!</p>
+  </footer>
+</div>
+
+<!-- ═══ PREDICTION ═══ -->
+<div class="page" id="page-predict">
+  <div class="page-inner">
+    <div class="predict-section">
+      <h2>Diabetes Prediction</h2>
+      <div class="glossary-top-link">
+        <span style="color:#1976d2;">🔵</span>
+        <a href="#" onclick="showPage('glossary')">Glossary Terms – Understand Input Fields</a>
+      </div>
+      <div class="form-row"><label>Age:</label>
+        <input type="number" id="age" min="1" max="120" placeholder="Enter your age"/>
+      </div>
+      <div class="form-row"><label>Gender:</label>
+        <select id="gender"><option value="">--Select--</option><option>Male</option><option>Female</option></select>
+      </div>
+      <div class="form-row"><label>Polyuria:</label>
+        <select id="polyuria"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Polydipsia:</label>
+        <select id="polydipsia"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Sudden Weight Loss:</label>
+        <select id="sudden_weight_loss"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Weakness:</label>
+        <select id="weakness"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Polyphagia:</label>
+        <select id="polyphagia"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Genital Thrush:</label>
+        <select id="genital_thrush"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Visual Blurring:</label>
+        <select id="visual_blurring"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Itching:</label>
+        <select id="itching"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Irritability:</label>
+        <select id="irritability"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Delayed Healing:</label>
+        <select id="delayed_healing"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Partial Paresis:</label>
+        <select id="partial_paresis"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Muscle Stiffness:</label>
+        <select id="muscle_stiffness"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Alopecia:</label>
+        <select id="alopecia"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="form-row"><label>Obesity:</label>
+        <select id="obesity"><option value="">--Select--</option><option>Yes</option><option>No</option></select>
+      </div>
+
+      <button class="btn-predict" onclick="runPrediction()">Predict</button>
+
+      <div class="result-box" id="resultBox">
+        <div class="result-title" id="resultTitle"></div>
+        <video id="resultVideo" autoplay loop muted playsinline></video>
+        <div class="tips-section" id="tipsSection"></div>
+      </div>
+
+      <div class="referral-note" id="referralNote" style="display:none;">
+        Looking to consult or connect with experts? Explore our <b onclick="showPage('referral')">Referral System</b> too!
+      </div>
+      <div class="glossary-bottom">
+        <a href="#" onclick="showPage('glossary')">Need help with terms?</a>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <img src="/static/images/logo.png" alt="Logo"/>
+    <p>Diabetes Prediction – A platform to help predict diabetes based on multiple health factors. Stay informed, stay healthy!</p>
+  </footer>
+</div>
+
+<!-- ═══ BMI ═══ -->
+<div class="page" id="page-bmi">
+  <div class="page-inner">
+    <div class="bmi-section">
+      <h2>BMI Calculator</h2>
+      <p style="text-align:center;color:var(--text-light);margin-bottom:24px;font-size:.9rem;">Body Mass Index helps assess if your weight is healthy for your height.</p>
+      <div class="form-row"><label>Height (cm):</label>
+        <input type="number" id="bmiHeight" placeholder="e.g. 170" min="50" max="250"/>
+      </div>
+      <div class="form-row"><label>Weight (kg):</label>
+        <input type="number" id="bmiWeight" placeholder="e.g. 65" min="10" max="300"/>
+      </div>
+      <button class="btn-predict" onclick="calcBMI()">Calculate BMI</button>
+      <div class="bmi-result" id="bmiResult">
+        <div class="bmi-value" id="bmiValue"></div>
+        <div class="bmi-category" id="bmiCategory"></div>
+        <div class="bmi-bar-wrap">
+          <div class="bmi-marker" id="bmiMarker"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:#888;margin-top:6px;">
+          <span>Underweight</span><span>Normal</span><span>Overweight</span><span>Obese</span>
+        </div>
+        <p id="bmiTip" style="margin-top:16px;font-size:.88rem;color:#444;line-height:1.6;"></p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <img src="/static/images/logo.png" alt="Logo"/>
+    <p>Diabetes Prediction – A platform to help predict diabetes based on multiple health factors. Stay informed, stay healthy!</p>
+  </footer>
+</div>
+
+<!-- ═══ GLOSSARY ═══ -->
+<div class="page" id="page-glossary">
+  <div class="page-inner">
+    <div class="glossary-section">
+      <h2>Glossary Terms</h2>
+      <div class="glossary-grid">
+        <div class="glossary-card"><h4>Polyuria</h4><p>Abnormally large or frequent urination. One of the earliest signs of diabetes caused by excess sugar pulling fluids through the kidneys.</p></div>
+        <div class="glossary-card"><h4>Polydipsia</h4><p>Excessive and persistent thirst. Occurs when the body loses too much fluid through frequent urination.</p></div>
+        <div class="glossary-card"><h4>Sudden Weight Loss</h4><p>Unexplained rapid reduction in body weight. Happens when the body cannot use glucose and begins breaking down fat and muscle instead.</p></div>
+        <div class="glossary-card"><h4>Polyphagia</h4><p>Extreme, persistent hunger. Even after eating, cells starved of glucose cause constant hunger signals.</p></div>
+        <div class="glossary-card"><h4>Genital Thrush</h4><p>A yeast infection (Candida) in the genital area. High blood sugar creates an environment that promotes yeast overgrowth.</p></div>
+        <div class="glossary-card"><h4>Visual Blurring</h4><p>Blurry vision caused by fluid changes in the eye lens due to elevated blood sugar levels.</p></div>
+        <div class="glossary-card"><h4>Partial Paresis</h4><p>Partial loss of movement or muscle weakness. In diabetes, it can result from nerve damage (neuropathy) caused by prolonged high blood sugar.</p></div>
+        <div class="glossary-card"><h4>Muscle Stiffness</h4><p>Tightness or reduced flexibility in muscles. Diabetic neuropathy and poor circulation can contribute to this condition.</p></div>
+        <div class="glossary-card"><h4>Alopecia</h4><p>Hair loss or thinning. Diabetes-related hormonal imbalances and poor circulation can affect hair follicles.</p></div>
+        <div class="glossary-card"><h4>Delayed Healing</h4><p>Wounds or sores that heal slowly. High blood sugar impairs circulation and immune response making recovery slower.</p></div>
+        <div class="glossary-card"><h4>Irritability</h4><p>Mood changes and emotional instability. Blood sugar fluctuations directly affect brain chemistry leading to mood swings.</p></div>
+        <div class="glossary-card"><h4>Obesity</h4><p>Excessive body fat accumulation. A major risk factor for Type 2 diabetes as excess fat causes insulin resistance.</p></div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <img src="/static/images/logo.png" alt="Logo"/>
+    <p>Diabetes Prediction – A platform to help predict diabetes based on multiple health factors. Stay informed, stay healthy!</p>
+  </footer>
+</div>
+
+<!-- ═══ FAQ ═══ -->
+<div class="page" id="page-faq">
+  <div class="page-inner">
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div id="faqList"></div>
+    </div>
+  </div>
+  <footer>
+    <img src="/static/images/logo.png" alt="Logo"/>
+    <p>Diabetes Prediction – A platform to help predict diabetes based on multiple health factors. Stay informed, stay healthy!</p>
+  </footer>
+</div>
+
+<!-- ═══ REFERRAL ═══ -->
+<div class="page" id="page-referral">
+  <div class="page-inner">
+    <div class="referral-section">
+      <h2>🏥 Hospital Referral System</h2>
+      <p class="referral-sub">Select your nearest area to find diabetes-specialized hospitals near you.</p>
+      <div class="area-grid" id="areaGrid"></div>
+      <div id="hospitalsDisplay">
+        <div class="hospitals-section-title"><span>📍</span><span id="selectedAreaTitle"></span></div>
+        <div class="hospitals-grid" id="hospitalsGrid"></div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <img src="/static/images/logo.png" alt="Logo"/>
+    <p>Diabetes Prediction – A platform to help predict diabetes based on multiple health factors. Stay informed, stay healthy!</p>
+  </footer>
+</div>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ── PAGE NAVIGATION ──────────────────────────────────────────────────────────
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const map={home:'nav-home',bmi:'nav-bmi',faq:'nav-faq'};
+  if(map[name]) document.getElementById(map[name]).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── PREDICTION (calls Flask /predict) ────────────────────────────────────────
+const highRiskTips=[
+  "🩸 Monitor your blood glucose levels regularly and keep a log to share with your doctor.",
+  "🥗 Follow a low-glycemic diet: reduce white rice, sugar, and processed foods.",
+  "🚶 Aim for at least 30 minutes of moderate physical activity 5 days a week.",
+  "💧 Stay well-hydrated. Drink 8–10 glasses of water daily to help regulate blood sugar.",
+  "⚖️ Work towards achieving and maintaining a healthy body weight to reduce insulin resistance.",
+  "🚭 Avoid smoking and limit alcohol consumption as they increase diabetes complications.",
+  "😴 Ensure 7–8 hours of quality sleep. Poor sleep disrupts insulin sensitivity.",
+  "🏥 Consult a doctor immediately for proper testing (HbA1c, fasting glucose) and diagnosis."
+];
+const lowRiskTips=[
+  "✅ Great news! Keep up your healthy habits — they're your best defense against diabetes.",
+  "🥦 Continue eating a balanced diet rich in fiber, vegetables, and whole grains.",
+  "🏃 Maintain your active lifestyle. Regular exercise keeps blood sugar levels stable.",
+  "🧘 Manage stress effectively through yoga, meditation, or hobbies you enjoy.",
+  "🔬 Schedule routine health check-ups every year to monitor blood sugar levels.",
+  "💤 Keep your sleep schedule consistent — good sleep is key to metabolic health.",
+  "🤝 Encourage friends and family to also check their diabetes risk!"
+];
+
+async function runPrediction(){
+  const fields=['age','gender','polyuria','polydipsia','sudden_weight_loss','weakness',
+    'polyphagia','genital_thrush','visual_blurring','itching','irritability',
+    'delayed_healing','partial_paresis','muscle_stiffness','alopecia','obesity'];
+
+  const data={};
+  for(const f of fields){
+    const el=document.getElementById(f);
+    if(!el||!el.value){alert('Please fill in all fields before predicting.');return;}
+    data[f]=el.value;
+  }
+
+  const btn=document.querySelector('.btn-predict');
+  btn.textContent='Predicting...';btn.disabled=true;
+
+  try{
+    const res=await fetch('/predict',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+    const json=await res.json();
+    if(json.error){alert('Error: '+json.error);return;}
+    showResult(json.prediction);
+  }catch(e){
+    alert('Could not connect to server. Make sure app.py is running.');
+  }finally{
+    btn.textContent='Predict';btn.disabled=false;
+  }
+}
+
+function showResult(result){
+  const box=document.getElementById('resultBox');
+  const titleEl=document.getElementById('resultTitle');
+  const videoEl=document.getElementById('resultVideo');
+  const tipsEl=document.getElementById('tipsSection');
+  const referralNote=document.getElementById('referralNote');
+
+  box.className='result-box';
+  box.style.display='block';
+
+  if(result==='Positive'){
+    box.classList.add('high-risk');
+    titleEl.innerHTML='⚠️ You may have or be at higher risk of Diabetes.';
+    videoEl.src='/static/videos/bad_result.mp4';
+    tipsEl.innerHTML='<h4>💊 Health Guidelines for High-Risk Individuals:</h4><ul>'+
+      highRiskTips.map(t=>`<li>${t}</li>`).join('')+'</ul>';
+    referralNote.style.display='block';
+  }else{
+    box.classList.add('low-risk');
+    titleEl.innerHTML='✅ Great! You appear to be at Low Risk of Diabetes.';
+    videoEl.src='/static/videos/nice_result.mp4';
+    tipsEl.innerHTML='<h4>🌟 Keep It Up! Wellness Tips for You:</h4><ul>'+
+      lowRiskTips.map(t=>`<li>${t}</li>`).join('')+'</ul>';
+    referralNote.style.display='none';
+  }
+  videoEl.load();videoEl.play();
+  box.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ── BMI ──────────────────────────────────────────────────────────────────────
+function calcBMI(){
+  const h=parseFloat(document.getElementById('bmiHeight').value);
+  const w=parseFloat(document.getElementById('bmiWeight').value);
+  if(!h||!w||h<50||w<10){alert('Please enter valid height and weight.');return;}
+  const bmi=w/((h/100)**2);
+  const val=bmi.toFixed(1);
+  document.getElementById('bmiResult').style.display='block';
+  document.getElementById('bmiValue').textContent=val;
+  let cat,color,tip,pct;
+  if(bmi<18.5){cat='Underweight';color='#64b5f6';pct=10;tip='Your BMI is below the healthy range. Consider increasing caloric intake with nutrient-dense foods and consult a nutritionist.';}
+  else if(bmi<25){cat='Normal Weight';color='#66bb6a';pct=35;tip='Excellent! Your BMI is in the healthy range. Maintain your balanced diet and regular physical activity.';}
+  else if(bmi<30){cat='Overweight';color='#ffa726';pct=62;tip='Your BMI is slightly elevated. Consider increasing physical activity and moderating high-calorie food intake to reduce diabetes risk.';}
+  else{cat='Obese';color='#ef5350';pct=88;tip='Your BMI indicates obesity, which significantly increases diabetes risk. Please consult a healthcare provider for a personalized plan.';}
+  document.getElementById('bmiCategory').textContent=cat;
+  document.getElementById('bmiCategory').style.color=color;
+  document.getElementById('bmiValue').style.color=color;
+  document.getElementById('bmiTip').textContent=tip;
+  document.getElementById('bmiMarker').style.left=pct+'%';
+}
+
+// ── FAQ ──────────────────────────────────────────────────────────────────────
+const faqs=[
+  {q:"What is diabetes?",a:"Diabetes is a chronic metabolic disease where the body either doesn't produce enough insulin or can't effectively use it, resulting in elevated blood glucose. There are three main types: Type 1, Type 2, and Gestational diabetes."},
+  {q:"What are the early symptoms of diabetes?",a:"Early symptoms include frequent urination (polyuria), excessive thirst (polydipsia), unexplained weight loss, extreme hunger (polyphagia), fatigue, blurred vision, slow-healing wounds, and frequent infections."},
+  {q:"How accurate is DiaPredict's prediction?",a:"DiaPredict uses a Random Forest classifier trained on the UCI Early Stage Diabetes Risk Prediction Dataset (520 samples) with ~92% accuracy. It is NOT a medical diagnosis — always consult a qualified doctor for confirmation."},
+  {q:"What is the difference between Type 1 and Type 2 diabetes?",a:"Type 1 is an autoimmune condition destroying insulin-producing cells, usually appearing in childhood. Type 2 develops gradually and is often linked to lifestyle factors like obesity, poor diet, and physical inactivity."},
+  {q:"Can diabetes be prevented?",a:"Type 2 diabetes can often be prevented through lifestyle changes: maintaining a healthy weight, regular exercise (150 min/week), eating a balanced low-sugar diet, avoiding smoking, and monitoring blood sugar regularly."},
+  {q:"What is a normal blood sugar level?",a:"Fasting blood sugar: 70–99 mg/dL (Normal), 100–125 mg/dL (Pre-diabetes), 126+ mg/dL (Diabetes). HbA1c below 5.7% is normal; 5.7–6.4% is pre-diabetes; 6.5%+ is diabetes."},
+  {q:"What does BMI have to do with diabetes?",a:"BMI above 25 increases insulin resistance, and BMI above 30 significantly raises the risk of Type 2 diabetes. Use our BMI Calculator to check your BMI."},
+  {q:"Should I see a doctor if my prediction shows High Risk?",a:"Yes, absolutely. DiaPredict is a screening tool, not a definitive diagnosis. If your result shows High Risk, please visit an endocrinologist for HbA1c testing and fasting blood glucose evaluation."},
+  {q:"Is my data stored anywhere?",a:"No. DiaPredict processes your inputs on the local server only. No personal data is stored in any database or sent to external services. Your privacy is fully protected."},
+  {q:"How can I find nearby diabetes specialists?",a:"Use our Referral System to select your nearest area in Hyderabad and see a curated list of diabetes-specialized hospitals and clinics near you."}
+];
+function buildFAQ(){
+  const c=document.getElementById('faqList');
+  faqs.forEach((item,i)=>{
+    c.innerHTML+=`<div class="faq-item"><div class="faq-q" onclick="toggleFAQ(${i})">${item.q}<span>+</span></div><div class="faq-a" id="faq-a-${i}">${item.a}</div></div>`;
+  });
+}
+function toggleFAQ(i){
+  document.querySelectorAll('.faq-q')[i].classList.toggle('open');
+  document.getElementById('faq-a-'+i).classList.toggle('open');
+}
+
+// ── REFERRAL ─────────────────────────────────────────────────────────────────
+const hospitalData={
+  "Jubilee Hills":[
+    {name:"Apollo Sugar Clinic – Best Diabetes Clinic",addr:"Jubilee Hills, Hyderabad",tag:"Diabetes Specialist"},
+    {name:"Apollo Hospitals Jubilee Hills",addr:"Film Nagar, Jubilee Hills, Hyderabad, Telangana 500033",tag:"Multi-Specialty"}
+  ],
+  "Banjara Hills":[
+    {name:"CARE Hospitals Banjara Hills",addr:"Road No. 1, Prem Nagar, Banjara Hills, Hyderabad, Telangana 500034",tag:"Multi-Specialty"},
+    {name:"Star Hospitals – Block A & C",addr:"8-2-596/5, Road No. 10, Gaffar Khan Colony, Banjara Hills, Hyderabad, Telangana 500034",tag:"Multi-Specialty"}
+  ],
+  "Gachibowli":[
+    {name:"Boston Diabetes Care",addr:"1st Floor, above Ratnadeep Supermarket, Lumbini Avenue, Gachibowli, Hyderabad, Telangana 500032",tag:"Diabetes Care"},
+    {name:"Park Endocrinology Clinic",addr:"Lumbini Avenue, Gachibowli, Hyderabad, Telangana 500032",tag:"Endocrinology"}
+  ],
+  "Madhapur":[
+    {name:"Sugar.fit – Diabetes Centres for Excellence",addr:"Plot No. 118/24, Rohini Layout Rd, Silicon Valley, Madhapur, Hyderabad, Telangana 500081",tag:"Diabetes Specialist"},
+    {name:"Medicover Hospitals Madhapur",addr:"Madhapur, Hyderabad, Telangana 500081",tag:"Multi-Specialty"}
+  ],
+  "HITEC City":[
+    {name:"Medicover Hospitals – Hitech City",addr:"Behind Cyber Towers, HUDA Techno Enclave, HITEC City, Hyderabad, Telangana 500082",tag:"Multi-Specialty"},
+    {name:"KIMS Hospitals Kondapur",addr:"Kondapur, Hyderabad, Telangana 500084",tag:"Multi-Specialty"}
+  ],
+  "Kukatpally":[
+    {name:"Advanced Endocrine & Diabetes Hospital",addr:"MIG-73/0, Rd Number 1, KPHB Phase 1, Kukatpally, Hyderabad, Telangana 500072",tag:"Endocrinology"},
+    {name:"Immense Diabetes & Thyroid Hospital",addr:"Plot No-11, KPHB 5th Phase Rd, Kukatpally, Hyderabad, Telangana 500085",tag:"Diabetes Specialist"}
+  ],
+  "Secunderabad":[
+    {name:"Apollo Sugar Clinic – Secunderabad",addr:"Apollo Hospitals Secunderabad, St. John's Road, Secunderabad, Telangana 500003",tag:"Diabetes Specialist"},
+    {name:"KIMS Hospitals Secunderabad",addr:"1-8-31/1, Minister Road, Secunderabad, Telangana 500003",tag:"Multi-Specialty"}
+  ],
+  "Begumpet":[
+    {name:"Oxycare Multi Speciality Hospitals",addr:"Durga Towers, Rasoolpura, Begumpet, Hyderabad, Telangana 500003",tag:"Multi-Specialty"},
+    {name:"KIMS Sunshine Hospitals Begumpet",addr:"Begumpet, Hyderabad, Telangana 500016",tag:"Multi-Specialty"}
+  ],
+  "Ameerpet":[
+    {name:"Medi Star Hospitals",addr:"HMDA Maitrivanam, Ameerpet, Hyderabad, Telangana 500038",tag:"Multi-Specialty"},
+    {name:"Aster Prime Hospital",addr:"Plot No. 4, Mythrivanam, Ameerpet, Hyderabad, Telangana 500016",tag:"Multi-Specialty"}
+  ],
+  "Dilsukhnagar":[
+    {name:"Rao's Diabetic Care Centre",addr:"Gaddiannaram, Dilsukhnagar, Hyderabad, Telangana 500060",tag:"Diabetes Specialist"},
+    {name:"Sai Sanjeevini Hospitals",addr:"Dilsukhnagar Main Road, Hyderabad, Telangana 500060",tag:"Multi-Specialty"}
+  ]
+};
+function buildReferral(){
+  const grid=document.getElementById('areaGrid');
+  Object.keys(hospitalData).forEach(area=>{
+    const btn=document.createElement('div');
+    btn.className='area-btn';btn.textContent=area;
+    btn.onclick=()=>selectArea(area,btn);
+    grid.appendChild(btn);
+  });
+}
+function selectArea(area,btn){
+  document.querySelectorAll('.area-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('selectedAreaTitle').textContent='Hospitals near '+area;
+  document.getElementById('hospitalsGrid').innerHTML=hospitalData[area].map(h=>`
+    <div class="hospital-card">
+      <h4>🏥 ${h.name}</h4>
+      <p>📍 ${h.addr}</p>
+      <span class="hosp-tag">${h.tag}</span>
+    </div>`).join('');
+  document.getElementById('hospitalsDisplay').style.display='block';
+  document.getElementById('hospitalsDisplay').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── SCROLL TOP ────────────────────────────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTop').classList.toggle('visible',window.scrollY>300);
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildFAQ();
+buildReferral();
+</script>
+</body>
+</html>
