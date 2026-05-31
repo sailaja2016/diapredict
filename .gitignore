@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Model files (regenerated on first run)
+diabetes_model.pkl
+label_encoders.pkl
+
+# OS
+.DS_Store
+Thumbs.db
