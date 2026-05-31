@@ -118,7 +118,7 @@ DiaPredict/
 
 ## 👩‍💻 Developed By:
 
-*K. Sailaja*
+*K. Sailaja*  
 3rd Year B.Tech Mini Project 
-Department of Computer Science & Engineering
-Rishi MS Institute of Engineering and Technology for Women (2022 - 2026)
+Department of Computer Science and Engineering
+Rishi MS Institute of Engineering and Technology for Women (2022–2026)
