@@ -35,6 +35,14 @@
 
 ---
 
+## 🌐 Live Demo:
+👉 https://diapredict-mzc0.onrender.com
+
+> Note: Hosted on Render free tier — first load may take ~50 seconds
+> if the service was inactive. Subsequent loads are instant.
+
+---
+
 ## 💻 The system:
 - Accepts symptom-based inputs entered by the user via a web form
 - Runs them through a trained Random Forest classifier
