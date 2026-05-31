@@ -1,7 +1,7 @@
 # 🩺 DiaPredict — Early Stage Diabetes Risk Prediction
 ## 📌 About the Project:
 *DiaPredict* is a comprehensive web-based predictive system that uses Machine Learning to assess the risk of early-stage diabetes based on user-reported symptoms. It accepts simple symptom-based inputs — such as age, gender, and 14 diabetes-related symptoms — and processes them through a *Random Forest classifier* trained on a validated healthcare dataset.
-> ⚠️ This tool is for *awareness and early screening only* — not a substitute for professional medical diagnosis.
+> This tool is for *awareness and early screening only* — not a substitute for professional medical diagnosis.
 
 ---
 
@@ -19,7 +19,7 @@
 - Integrated into a Flask web application with a BMI calculator and glossary for a complete, user-friendly experience.
 
 ## 📈 Results:
-- Model Accuracy: 92%
+- Model Accuracy: ~92%
 - Classification: Positive vs Negative
 
 ## 🖥️ Screenshots:
@@ -29,22 +29,9 @@
 <img width="1920" height="830" alt="  (4)" src="https://github.com/user-attachments/assets/97155d51-7c43-4026-afd9-482a0a21fea4" />
 <img width="1920" height="820" alt="  (5)" src="https://github.com/user-attachments/assets/6e1164ec-81d1-453f-9248-c5524c88f168" />
 <img width="1920" height="820" alt="  (6)" src="https://github.com/user-attachments/assets/4c5e4f5b-ddb3-4c07-b6b1-2bc4b6cfb400" />
-<img width="1920" height="1008" alt="(9)" src="https://github.com/user-attachments/assets/7708542d-724a-4e75-a73a-2dd76f31358a" />
+<img width="1920" height="820" alt="(9)" src="https://github.com/user-attachments/assets/0d0c7f5e-075c-4541-b45b-d4cc7ac92af6" />
 <img width="1920" height="820" alt="  (7)" src="https://github.com/user-attachments/assets/3284302c-4f2d-48a3-9576-54ff367cb084" />
 <img width="1920" height="820" alt="  (8)" src="https://github.com/user-attachments/assets/ff2ff044-551f-44ba-85ec-01868039dbea" />
-
----
-
-## ✨ Features:
-
-|       Feature       |         Description                                          |
-|---------------------|--------------------------------------------------------------|
-| Diabetes Prediction | 16-feature symptom-based risk assessment using Random Forest |
-| Healthcare Advisory | Personalized health tips based on your prediction result     |
-| Referral System     | Find nearby diabetes hospitals across 10 areas in Hyderabad  |
-| BMI Calculator      | Check your Body Mass Index with visual category indicator    |
-| Glossary            | Clear definitions of all medical terms used in the form      |
-| FAQ                 | Common questions about diabetes answered                     |
 
 ---
 
@@ -65,6 +52,19 @@
 5. Output → Positive (High Risk) | Negative (Low Risk)
 6. High-risk users receive personalized healthcare advisory tips
 7. Result displayed with animated feedback and referral hospital suggestions
+
+---
+
+## ✨ Features:
+
+|       Feature       |         Description                                          |
+|---------------------|--------------------------------------------------------------|
+| Diabetes Prediction | 16-feature symptom-based risk assessment using Random Forest |
+| Healthcare Advisory | Personalized health tips based on your prediction result     |
+| Referral System     | Find nearby diabetes hospitals across 10 areas in Hyderabad  |
+| BMI Calculator      | Check your Body Mass Index with visual category indicator    |
+| Glossary            | Clear definitions of all medical terms used in the form      |
+| FAQ                 | Common questions about diabetes answered                     |
 
 ---
 
@@ -116,9 +116,9 @@ DiaPredict/
 
 ---
 
-## 👩‍💻 Developed By
+## 👩‍💻 Developed By:
 
-**K. Sailaja** 
+*K. Sailaja*
 3rd Year B.Tech Mini Project 
 Department of Computer Science & Engineering
 Rishi MS Institute of Engineering and Technology for Women (2022 - 2026)
