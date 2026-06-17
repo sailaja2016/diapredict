@@ -19,7 +19,7 @@
 - Integrated into a Flask web application with a BMI calculator and glossary for a complete, user-friendly experience.
 
 ## 📈 Results:
-- Model Accuracy: ~92%
+- Model Accuracy: ~89%
 - Classification: Positive vs Negative
 
 ## 🖥️ Screenshots:
